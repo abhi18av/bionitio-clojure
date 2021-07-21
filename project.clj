@@ -5,6 +5,7 @@
             :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [clj-biosequence "0.5.2"]
+                 [cli-matic "0.4.3"]
                  [org.clojure/tools.cli "1.0.206"]
                  [com.taoensso/timbre "5.1.2"]]
   :main ^:skip-aot bionitio.core
