@@ -65,8 +65,11 @@
   [cfg sub-cmd]
   (let [branch (U2/get-subcommand cfg sub-cmd)]
     (str
-     "====== GENERIC 'global' HELP CONFIG: " sub-cmd "\n"
-      branch)))
+     #_"====== GENERIC 'global' HELP CONFIG: "
+     #_sub-cmd
+     "\n"
+     "USAGE: bionitio  echo --message \"Hello, world!\""
+      #_branch)))
 
 (defn echo-message
   [{:keys [message]}]
@@ -76,7 +79,7 @@
   {:command      "helpgen"
    :description  "Demonstrates how to customize the generation of help text"
    :global-help  my-global-help
-   :version      "0.1.18"
+   :version      "2.0.0"
    :opts         []
    :subcommands  [{:command     "echo"
                    :description "echoes a message."
