@@ -1,57 +1,102 @@
 plugins {
-  id 'dev.clojurephant.clojure' version '0.6.0'
-  id 'application'
-  id 'com.github.johnrengelman.shadow' version '5.0.0'
-  id 'maven-publish'
+    id 'dev.clojurephant.clojure' version '0.6.0'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+    id 'maven-publish'
+    id 'org.jreleaser' version '0.7.0'
 }
 
 group = 'net.clojars.abhi18av'
-version = '0.1.0-SNAPSHOT'
 
 mainClassName = 'net.clojars.abhi18av.bionitio_clojure'
 
 repositories {
-  mavenCentral()
-  maven {
-    name = 'clojars'
-    url = 'https://repo.clojars.org'
-  }
+    mavenCentral()
+    maven {
+        name = 'clojars'
+        url = 'https://repo.clojars.org'
+    }
 }
 
 dependencies {
-  implementation 'org.clojure:clojure:1.10.0'
+    implementation 'org.clojure:clojure:1.10.3'
+    implementation 'clj-biosequence:clj-biosequence:0.5.2'
+    implementation "org.clojure:tools.cli:1.0.206"
+    implementation "com.taoensso:timbre:5.1.2"
 
-  testRuntimeOnly 'org.ajoberstar:jovial:0.3.0'
+    testRuntimeOnly 'org.ajoberstar:jovial:0.3.0'
 
-  devImplementation 'org.clojure:tools.namespace:1.0.0'
+    devImplementation 'org.clojure:tools.namespace:1.1.0'
 }
 
 tasks.withType(Test) {
-  useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 clojure {
-  builds {
-    main {
-      aotAll()
+    builds {
+        main {
+            aotAll()
+        }
     }
-  }
 }
 
 publishing {
-  publications {
-    shadow(MavenPublication) { publication ->
-      project.shadow.component(publication)
+    publications {
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
     }
-  }
-  repositories {
-    maven {
-      name = 'clojars'
-      url = 'https://repo.clojars.org'
-      credentials {
-        username = System.env['CLOJARS_USER']
-        password = System.env['CLOJARS_PASSWORD']
-      }
+    repositories {
+        maven {
+            name = 'clojars'
+            url = 'https://repo.clojars.org'
+            credentials {
+                username = System.env['CLOJARS_USER']
+                password = System.env['CLOJARS_PASSWORD']
+            }
+        }
     }
-  }
+}
+
+//config {
+//    licensing {
+//        licenses {
+//            license {
+//                id = 'Apache-2.0'
+//            }
+//        }
+//    }
+//}
+
+jreleaser {
+    project {
+        name = "bionitio-clojure"
+        version = "0.1.2-SNAPSHOT"
+        description = "Demonstrating best practices for bioinformatics command line tools "
+        website = "https://github.com/abhi18av/bionitio-clojure"
+        docsUrl = "https://github.com/abhi18av/bionitio-clojure"
+        license = "Apache-2.0"
+        authors = ["abhi18av"]
+        copyright = '2021 @abhi18av'
+    }
+
+    distributions {
+        app {
+            distributionType = 'SINGLE_JAR'
+
+            //TODO: Using the clean->assembleShadow->shadowDistZip->jreleaseRelease the
+            // the shadow is getting published along with the non-uber-jars.
+            artifacts {
+                shadowJarZip {
+                    path = "build/distributions/{{projectName}}-shadow.zip"
+                    transform = "{{projectName}}-shadow-{{projectVersion}}.zip"
+                }
+//                shadowJarTar {
+//                    path = "build/distributions/{{projectName}}-shadow.tar"
+//                    transform = "{{projectName}}-shadow-{{projectVersion}}.tar"
+//                }
+            }
+        }
+    }
 }

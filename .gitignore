@@ -5,6 +5,8 @@
 .gradle/
 build/
 gradle.properties
+target
+.lein-failures
 
 # IntelliJ
 *.iml
